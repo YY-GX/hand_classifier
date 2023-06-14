@@ -78,7 +78,7 @@ for i, label in enumerate(list(os.listdir(os.path.join(dataset_path, 'archive'))
     img_pths = list(paths.list_images(os.path.join(dataset_path, 'archive', label)))
     for j, img_pth in enumerate(img_pths):
         # print("- ", j)
-        img_pths.append(img_pth)
+        # img_pths.append(img_pth)
         labels.append(label)
 
 print("Mini Imagenet setup!")
