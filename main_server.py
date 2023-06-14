@@ -1,4 +1,5 @@
 # imports
+import argparse
 import matplotlib.pyplot as plt
 import matplotlib
 import joblib
@@ -32,6 +33,20 @@ SEED=42
 seed_everything(SEED=SEED)
 '''SEED Everything'''
 
+
+parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
+parser.add_argument('--epochs', type=int, default=10, help='training epochs')
+parser.add_argument('--lr', type=float, default=1e-4, help='learning rate')
+parser.add_argument('--bs', type=int, default=32, help='batch size')
+parser.add_argument('--dropout_ratio', type=float, default=0.5, help='dropout ratio')
+
+
+args = parser.parse_args()
+
+
+
+
+
 # device
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -48,10 +63,10 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 print(f"Using device: {device}")
 
-epochs = 10
-BATCH_SIZE = 32
-lr = 1e-3
-dropout_ratio = 0.5  #0.4
+epochs = args.epochs
+BATCH_SIZE = args.bs
+lr = args.lr
+dropout_ratio = args.dropout_ratio
 
 # For Imagenet + Hands data preparation
 
@@ -274,7 +289,10 @@ for epoch in range(epochs):
 end = time.time()
 print((end-start)/60, 'minutes')
 
-torch.save(model.state_dict(), f"outputs/models/resnet18_epochs{epochs}.pth")
+suffix = "lr_{}_bs_{}_dr_{}".format(args.lr, args.bs, args.dropout_ratio)
+
+
+torch.save(model.state_dict(), f"outputs/models/resnet18_epochs{epochs}_{suffix}.pth")
 # accuracy plots
 plt.figure(figsize=(10, 7))
 plt.plot(train_accuracy, color='green', label='train accuracy')
@@ -282,7 +300,7 @@ plt.plot(val_accuracy, color='blue', label='validataion accuracy')
 plt.xlabel('Epochs')
 plt.ylabel('Accuracy')
 plt.legend()
-plt.savefig('outputs/plots/accuracy.png')
+plt.savefig(f'outputs/plots/accuracy_{suffix}.png')
 # loss plots
 plt.figure(figsize=(10, 7))
 plt.plot(train_loss, color='orange', label='train loss')
@@ -290,14 +308,14 @@ plt.plot(val_loss, color='red', label='validataion loss')
 plt.xlabel('Epochs')
 plt.ylabel('Loss')
 plt.legend()
-plt.savefig('outputs/plots/loss.png')
+plt.savefig(f'outputs/plots/loss_{suffix}.png')
 
 # save the accuracy and loss lists as pickled files
 print('Pickling accuracy and loss lists...')
-joblib.dump(train_accuracy, 'outputs/models/train_accuracy.pkl')
-joblib.dump(train_loss, 'outputs/models/train_loss.pkl')
-joblib.dump(val_accuracy, 'outputs/models/val_accuracy.pkl')
-joblib.dump(val_loss, 'outputs/models/val_loss.pkl')
+joblib.dump(train_accuracy, 'outputs/models/train_accuracy_{suffix}.pkl')
+joblib.dump(train_loss, 'outputs/models/train_loss_{suffix}.pkl')
+joblib.dump(val_accuracy, 'outputs/models/val_accuracy_{suffix}.pkl')
+joblib.dump(val_loss, 'outputs/models/val_loss_{suffix}.pkl')
 
 correct, total = test(model, testloader)
 print('Accuracy of the network on test images: %0.3f %%' % (100 * correct / total))
