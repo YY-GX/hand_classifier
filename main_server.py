@@ -56,8 +56,8 @@ dropout_ratio = 0.6  #0.4
 # For Imagenet + Hands data preparation
 
 # label & img preparation
-# dataset_path = "/Volumes/disk_2t/datasets/mini_imagenet_and_hands"
-dataset_path = "/var/datasets/miniimagenet"
+dataset_path = "/Volumes/disk_2t/datasets/mini_imagenet_and_hands"
+# dataset_path = "/var/datasets/miniimagenet"
 
 img_pths, labels = [], []
 
@@ -75,8 +75,9 @@ print("Hand setup!")
 # For imagenet_mini
 for i, label in enumerate(list(os.listdir(os.path.join(dataset_path, 'archive')))):
     # print(i, " - ", label)
-    img_pths = list(paths.list_images(os.path.join(dataset_path, 'archive', label)))
-    for j, img_pth in enumerate(img_pths):
+    img_pths_label = list(paths.list_images(os.path.join(dataset_path, 'archive', label)))
+    img_pths += img_pths_label
+    for j, img_pth in enumerate(img_pths_label):
         # print("- ", j)
         # img_pths.append(img_pth)
         labels.append(label)
