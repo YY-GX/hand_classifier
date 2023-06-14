@@ -49,9 +49,9 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
 epochs = 10
-BATCH_SIZE = 16
-lr = 1e-4
-dropout_ratio = 0.6  #0.4
+BATCH_SIZE = 32
+lr = 1e-3
+dropout_ratio = 0.5  #0.4
 
 # For Imagenet + Hands data preparation
 
@@ -107,7 +107,7 @@ val_transform = transforms.Compose(
                           std=[0.229, 0.224, 0.225])])
 
 # divide the data into train, validation, and test set
-(X, x_val , Y, y_val) = train_test_split(img_pths, labels,
+(X, x_val, Y, y_val) = train_test_split(img_pths, labels,
                                          test_size=0.2,
                                          stratify=labels,
                                          random_state=42)
