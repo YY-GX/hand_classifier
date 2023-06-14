@@ -34,21 +34,22 @@ seed_everything(SEED=SEED)
 
 # device
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# For GPU
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# # For M2 chip
-# print(f"PyTorch version: {torch.__version__}")
-# # Check PyTorch has access to MPS (Metal Performance Shader, Apple's GPU architecture)
-# print(f"Is MPS (Metal Performance Shader) built? {torch.backends.mps.is_built()}")
-# print(f"Is MPS available? {torch.backends.mps.is_available()}")
-# # Set the device
-# device = "mps" if torch.backends.mps.is_available() else "cpu"
-# device = torch.device(device)
+# For M2 chip
+print(f"PyTorch version: {torch.__version__}")
+# Check PyTorch has access to MPS (Metal Performance Shader, Apple's GPU architecture)
+print(f"Is MPS (Metal Performance Shader) built? {torch.backends.mps.is_built()}")
+print(f"Is MPS available? {torch.backends.mps.is_available()}")
+# Set the device
+device = "mps" if torch.backends.mps.is_available() else "cpu"
+device = torch.device(device)
 
 
 print(f"Using device: {device}")
 
-epochs = 10
+epochs = 20
 BATCH_SIZE = 16
 lr = 1e-4
 dropout_ratio = 0.6  #0.4
@@ -56,8 +57,7 @@ dropout_ratio = 0.6  #0.4
 # For Imagenet + Hands data preparation
 
 # label & img preparation
-# dataset_path = "/Volumes/disk_2t/datasets/mini_imagenet_and_hands"
-dataset_path = "/var/datasets/miniimagenet"
+dataset_path = "/Volumes/disk_2t/datasets/mini_imagenet_and_hands"
 
 data, labels = [], []
 
@@ -269,7 +269,7 @@ for epoch in range(epochs):
 end = time.time()
 print((end-start)/60, 'minutes')
 
-torch.save(model.state_dict(), f"outputs/models/resnet18_epochs{epochs}.pth")
+torch.save(model.state_dict(), f"outputs/models/resnet34_epochs{epochs}.pth")
 # accuracy plots
 plt.figure(figsize=(10, 7))
 plt.plot(train_accuracy, color='green', label='train accuracy')
