@@ -59,30 +59,32 @@ dropout_ratio = 0.6  #0.4
 # dataset_path = "/Volumes/disk_2t/datasets/mini_imagenet_and_hands"
 dataset_path = "/var/datasets/miniimagenet"
 
-data, labels = [], []
+img_pths, labels = [], []
 
 # Get hands data
 for img_pth in list(paths.list_images(os.path.join(dataset_path, '102')))[:600]:
-    image = cv2.imread(img_pth)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    data.append(image)
+    img_pths.append(img_pth)
     labels.append('hand')
+
+    # image = cv2.imread(img_pth)
+    # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    # data.append(image)
+    # labels.append('hand')
 print("Hand setup!")
 
 # For imagenet_mini
 for i, label in enumerate(list(os.listdir(os.path.join(dataset_path, 'archive')))):
-    print(i, " - ", label)
+    # print(i, " - ", label)
     img_pths = list(paths.list_images(os.path.join(dataset_path, 'archive', label)))
     for j, img_pth in enumerate(img_pths):
-        print("- ", j)
-        image = cv2.imread(img_pth)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        data.append(image)
+        # print("- ", j)
+        img_pths.append(img_pth)
         labels.append(label)
+
 print("Mini Imagenet setup!")
 
 
-data = data
+# data = data
 labels = np.array(labels)
 # one hot encode
 lb = LabelBinarizer()
@@ -104,7 +106,7 @@ val_transform = transforms.Compose(
                           std=[0.229, 0.224, 0.225])])
 
 # divide the data into train, validation, and test set
-(X, x_val , Y, y_val) = train_test_split(data, labels,
+(X, x_val , Y, y_val) = train_test_split(img_pths, labels,
                                          test_size=0.2,
                                          stratify=labels,
                                          random_state=42)
@@ -116,16 +118,18 @@ print(f"x_train examples: {len(x_train)}\nx_test examples: {len(x_test)}\nx_val 
 
 # custom dataset
 class ImageDataset(Dataset):
-    def __init__(self, images, labels=None, transforms=None):
-        self.X = images
+    def __init__(self, image_paths, labels=None, transforms=None):
+        self.image_paths = image_paths
         self.y = labels
         self.transforms = transforms
 
     def __len__(self):
-        return (len(self.X))
+        return (len(self.image_paths))
 
     def __getitem__(self, i):
-        data = self.X[i][:]
+        image_path = self.image_paths[i]
+        image = cv2.imread(image_path)
+        data = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
         if self.transforms:
             data = self.transforms(data)
