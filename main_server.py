@@ -56,8 +56,8 @@ dropout_ratio = 0.6  #0.4
 # For Imagenet + Hands data preparation
 
 # label & img preparation
-dataset_path = "/Volumes/disk_2t/datasets/mini_imagenet_and_hands"
-# dataset_path = "/var/datasets/miniimagenet"
+# dataset_path = "/Volumes/disk_2t/datasets/mini_imagenet_and_hands"
+dataset_path = "/var/datasets/miniimagenet"
 
 img_pths, labels = [], []
 
