@@ -39,6 +39,8 @@ parser.add_argument('--epochs', type=int, default=10, help='training epochs')
 parser.add_argument('--lr', type=float, default=1e-4, help='learning rate')
 parser.add_argument('--bs', type=int, default=32, help='batch size')
 parser.add_argument('--dropout_ratio', type=float, default=0.5, help='dropout ratio')
+parser.add_argument('--model_pth', type=str, default="outputs/models_server/resnet18_epochs10_lr_0.0001_bs_64_dr_0.6.pth",
+                    help='loaded model saved path')
 
 
 args = parser.parse_args()
@@ -208,6 +210,14 @@ class ResNet34(nn.Module):
 
 model = ResNet18(pretrained=True).to(device)
 # model = ResNet34(pretrained=True).to(device)
+
+
+if args.model_pth is not None:
+    if os.path.exists(args.model_pth):
+        print(">> Find model path!")
+    model.load_state_dict(torch.load(args.model_pth))
+    print(">> Model restored!")
+
 
 # optimizer
 optimizer = optim.Adam(model.parameters(), lr=lr)
