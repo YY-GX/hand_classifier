@@ -41,7 +41,8 @@ parser.add_argument('--bs', type=int, default=32, help='batch size')
 parser.add_argument('--dropout_ratio', type=float, default=0.5, help='dropout ratio')
 parser.add_argument('--model_pth', type=str, default="outputs/models_server/resnet18_epochs10_lr_0.0001_bs_64_dr_0.6.pth",
                     help='loaded model saved path')
-
+parser.add_argument('--samples_pth', type=str, default="data/archive/n01558993",
+                    help='path to samples')
 
 args = parser.parse_args()
 
@@ -72,9 +73,9 @@ dropout_ratio = args.dropout_ratio
 # For Imagenet + Hands data preparation
 
 # label & img preparation
-dataset_path = "data/onehand10k_256x256_dataset/test/imgs"
-dataset_path = "data/archive/n01532829"
-dataset_path = "data/archive/n01558993"
+# dataset_path = "data/onehand10k_256x256_dataset/test/imgs"
+# dataset_path = "data/archive/n01532829"
+dataset_path = args.samples_pth
 
 img_pths, labels = [], []
 
