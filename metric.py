@@ -41,7 +41,9 @@ parser.add_argument('--bs', type=int, default=32, help='batch size')
 parser.add_argument('--dropout_ratio', type=float, default=0.5, help='dropout ratio')
 parser.add_argument('--model_pth', type=str, default="outputs/models_server/resnet18_epochs10_lr_0.0001_bs_64_dr_0.6.pth",
                     help='loaded model saved path')
-parser.add_argument('--samples_pth', type=str, default="data/archive/n01558993",
+# parser.add_argument('--samples_pth', type=str, default="data/archive/n01558993",
+#                     help='path to samples')
+parser.add_argument('--samples_pth', type=str, default="data/Fakes_6channels",
                     help='path to samples')
 
 args = parser.parse_args()
@@ -80,7 +82,9 @@ dataset_path = args.samples_pth
 img_pths, labels = [], []
 
 # Get hands data
-for img_pth in list(paths.list_images(dataset_path))[:600]:
+for img_pth in list(paths.list_images(dataset_path))[:]:
+    if 'jpg' in img_pth:
+        continue
     img_pths.append(img_pth)
     labels.append('hand')
 
@@ -127,6 +131,7 @@ class ImageDataset(Dataset):
         image_path = self.image_paths[i]
         image = cv2.imread(image_path)
         data = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        data = np.stack([cv2.cvtColor(data, cv2.COLOR_BGR2GRAY) for _ in range(3)]).reshape([256, 256, 3])
 
         if self.transforms:
             data = self.transforms(data)
@@ -137,6 +142,7 @@ class ImageDataset(Dataset):
             return data
 
 evaluated_data = ImageDataset(img_pths, labels, val_transform)
+
 
 
 # dataloaders
@@ -188,13 +194,26 @@ def evaluate(model, dataloader):
             # if i == 0:
             #     print(torch.max(target.to(torch.int32), 1)[1])
     likelihood = torch.mean(likelihoods[1:, :], axis=0)
-    return likelihood
+    return likelihood, likelihoods[1:, :]
 
 
 
 
-likelihood = evaluate(model, loader)
-likelihood = torch.exp(likelihood) / torch.sum(torch.exp(likelihood))# torch.log(torch.exp(likelihood) / torch.sum(torch.exp(likelihood)))
-print(likelihood)
+likelihood, likelihoods = evaluate(model, loader)
+
+# print(likelihoods.shape)
+# print(likelihoods)
+likelihoods = likelihoods.cpu().numpy()
+# print(likelihoods[0, :])
+# print(np.argmax(likelihoods, axis=1))
+# print(np.argmax(likelihoods, axis=1).shape)
+is_right_ls = np.argmax(likelihoods, axis=1) == 0
+print(np.sum(is_right_ls) / len(is_right_ls))
+
+# likelihood = torch.exp(likelihood) / torch.sum(torch.exp(likelihood))# torch.log(torch.exp(likelihood) / torch.sum(torch.exp(likelihood)))
+# print(likelihood)
+# order = torch.argsort(likelihood, descending=True).cpu().numpy()
+# print(order)
+# print(np.sort(np.array(os.listdir("data/archive")))[order])
 
 #%%

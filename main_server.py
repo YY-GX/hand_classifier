@@ -147,7 +147,8 @@ class ImageDataset(Dataset):
     def __getitem__(self, i):
         image_path = self.image_paths[i]
         image = cv2.imread(image_path)
-        data = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        # data = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        data = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         if self.transforms:
             data = self.transforms(data)
@@ -302,7 +303,10 @@ print((end-start)/60, 'minutes')
 suffix = "lr_{}_bs_{}_dr_{}".format(args.lr, args.bs, args.dropout_ratio)
 
 
-torch.save(model.state_dict(), f"outputs/models/resnet18_epochs{epochs}_{suffix}.pth")
+SAVE_PTH = 'outputs/models_grey'
+
+
+torch.save(model.state_dict(), f"{SAVE_PTH}/resnet18_epochs{epochs}_{suffix}.pth")
 # accuracy plots
 plt.figure(figsize=(10, 7))
 plt.plot(train_accuracy, color='green', label='train accuracy')
@@ -322,10 +326,10 @@ plt.savefig(f'outputs/plots/loss_{suffix}.png')
 
 # save the accuracy and loss lists as pickled files
 print('Pickling accuracy and loss lists...')
-joblib.dump(train_accuracy, 'outputs/models/train_accuracy_{suffix}.pkl')
-joblib.dump(train_loss, 'outputs/models/train_loss_{suffix}.pkl')
-joblib.dump(val_accuracy, 'outputs/models/val_accuracy_{suffix}.pkl')
-joblib.dump(val_loss, 'outputs/models/val_loss_{suffix}.pkl')
+joblib.dump(train_accuracy, f'{SAVE_PTH}/train_accuracy_{suffix}.pkl')
+joblib.dump(train_loss, f'{SAVE_PTH}/train_loss_{suffix}.pkl')
+joblib.dump(val_accuracy, f'{SAVE_PTH}/val_accuracy_{suffix}.pkl')
+joblib.dump(val_loss, f'{SAVE_PTH}/val_loss_{suffix}.pkl')
 
 correct, total = test(model, testloader)
 print('Accuracy of the network on test images: %0.3f %%' % (100 * correct / total))
