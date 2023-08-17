@@ -210,7 +210,8 @@ class ResNet18(nn.Module):
         else:
             self.model = pretrainedmodels.__dict__['resnet18'](pretrained=None)
 
-        self.conv1 = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3,
+        print(self.model)
+        self.model.conv1 = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3,
                                bias=False)
 
         # change the classification layer
