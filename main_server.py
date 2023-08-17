@@ -152,8 +152,12 @@ class ImageDataset(Dataset):
     def __getitem__(self, i):
         image_path = self.image_paths[i]
         image = cv2.imread(image_path)
+        print(image.shape)
         # data = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         data = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        print(data.shape)
+        data.unsqueeze_(0)
+        print(data.shape)
 
         if self.transforms:
             data = self.transforms(data)
