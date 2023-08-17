@@ -272,7 +272,7 @@ def fit(model, dataloader):
     for i, data in tqdm(enumerate(dataloader), total=int(len(train_data)/dataloader.batch_size)):
         data, target = data[0].to(device), data[1].to(device)
         optimizer.zero_grad()
-        print(data.shape)
+        # print(data.shape)
         outputs = model(data)
         loss = criterion(outputs, torch.max(target.to(torch.int32), 1)[1])
         running_loss += loss.item()
