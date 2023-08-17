@@ -35,7 +35,7 @@ seed_everything(SEED=SEED)
 
 
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
-parser.add_argument('--epochs', type=int, default=10, help='training epochs')
+parser.add_argument('--epochs', type=int, default=5, help='training epochs')
 parser.add_argument('--lr', type=float, default=1e-4, help='learning rate')
 parser.add_argument('--bs', type=int, default=32, help='batch size')
 parser.add_argument('--dropout_ratio', type=float, default=0.5, help='dropout ratio')
