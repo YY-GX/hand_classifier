@@ -152,12 +152,12 @@ class ImageDataset(Dataset):
     def __getitem__(self, i):
         image_path = self.image_paths[i]
         image = cv2.imread(image_path)
-        print(image.shape)
+
         # data = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         data = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        print(data.shape)
+
         data = data[..., np.newaxis]
-        print(data.shape)
+
 
         if self.transforms:
             data = self.transforms(data)
@@ -243,6 +243,7 @@ def fit(model, dataloader):
     for i, data in tqdm(enumerate(dataloader), total=int(len(train_data)/dataloader.batch_size)):
         data, target = data[0].to(device), data[1].to(device)
         optimizer.zero_grad()
+        print(data.shape)
         outputs = model(data)
         loss = criterion(outputs, torch.max(target.to(torch.int32), 1)[1])
         running_loss += loss.item()
