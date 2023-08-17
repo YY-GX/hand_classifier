@@ -210,7 +210,7 @@ class ResNet18(nn.Module):
         else:
             self.model = pretrainedmodels.__dict__['resnet18'](pretrained=None)
 
-        print(self.model)
+        # print(self.model)
         self.model.conv1 = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3,
                                bias=False)
 
