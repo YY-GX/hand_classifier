@@ -39,9 +39,10 @@ parser.add_argument('--epochs', type=int, default=10, help='training epochs')
 parser.add_argument('--lr', type=float, default=1e-4, help='learning rate')
 parser.add_argument('--bs', type=int, default=32, help='batch size')
 parser.add_argument('--dropout_ratio', type=float, default=0.5, help='dropout ratio')
-parser.add_argument('--model_pth', type=str, default="outputs/models_server/resnet18_epochs10_lr_0.0001_bs_64_dr_0.6.pth",
+# parser.add_argument('--model_pth', type=str, default="outputs/models_server/resnet18_epochs10_lr_0.0001_bs_64_dr_0.6.pth",
+#                     help='loaded model saved path')
+parser.add_argument('--model_pth', type=str, default=None,
                     help='loaded model saved path')
-
 
 args = parser.parse_args()
 
