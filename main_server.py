@@ -156,7 +156,7 @@ class ImageDataset(Dataset):
         # data = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         data = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         print(data.shape)
-        data.unsqueeze_(0)
+        data = data[..., np.newaxis]
         print(data.shape)
 
         if self.transforms:
